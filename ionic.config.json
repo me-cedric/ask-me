@@ -1,0 +1,7 @@
+{
+  "name": "ask-me",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "vue"
+}
