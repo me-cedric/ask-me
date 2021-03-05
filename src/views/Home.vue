@@ -41,7 +41,15 @@ export default defineComponent({
     ...mapActions(['bindSubjects'])
   },
   computed: {
-    ...mapState(['subjects'])
+    test(): any {
+      return 2
+    },
+    subjects(): any {
+      return this.$store.state.subjects
+    },
+    answer(): any {
+      return this.$store.state.answer
+    }
   },
   components: {
     IonContent,
@@ -51,8 +59,9 @@ export default defineComponent({
     IonTitle,
     IonToolbar
   },
-  created() {
+  mounted() {
     this.bindSubjects()
+    this.$store.dispatch('getAnswer')
   }
 })
 </script>

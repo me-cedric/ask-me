@@ -1,5 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/firestore'
+import 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: process.env.VUE_APP_API_KEY,
@@ -14,6 +15,6 @@ const firebaseConfig = {
 const { Timestamp, GeoPoint } = firebase.firestore
 export { Timestamp, GeoPoint }
 
-const firebaseApp = firebase.initializeApp(firebaseConfig)
+export const firebaseApp = firebase.initializeApp(firebaseConfig)
 
 export const db = firebaseApp.firestore()

@@ -1,25 +1,33 @@
 import { Subject } from '@/data/subject'
 import { User } from '@/data/user'
 import { createStore } from 'vuex'
-import { vuexfireMutations, firestoreAction } from 'vuexfire'
-import { db } from './firebaseDatabase'
+import '@/plugins/firebaseDatabase'
+// import { vuexfireMutations, firestoreAction } from 'vuexfire'
+// import { db } from '@/plugins/firebaseDatabase'
+import mutations from './mutations'
+import actions from './actions'
+import getters from './getters'
 
-interface State {
+export interface State {
   subjects: Subject[]
   users: User[]
   user?: User
+  error?: string
 }
 
+const initialState = (): State => ({
+  subjects: [], // Will be bound as an array
+  user: null, // Will be bound as an object
+  users: [],
+  error: null
+})
+
 export default createStore<State>({
-  state: {
-    subjects: [], // Will be bound as an array
-    // user: null, // Will be bound as an object
-    users: []
-  },
-  mutations: {
-    ...vuexfireMutations
-  },
-  actions: {
+  state: initialState(),
+  mutations /*:  {
+    ...vuexfireMutations,
+  } */,
+  actions /*:  {
     bindSubjects: firestoreAction(({ bindFirestoreRef }) =>
       bindFirestoreRef('subjects', db.collection('subjects'))
     ),
@@ -32,6 +40,7 @@ export default createStore<State>({
     unbindUsers: firestoreAction(({ unbindFirestoreRef }) => {
       unbindFirestoreRef('users')
     })
-  },
+  } */,
+  getters,
   modules: {}
 })
