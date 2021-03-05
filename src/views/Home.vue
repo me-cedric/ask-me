@@ -7,17 +7,18 @@
     </ion-header>
 
     <ion-content :fullscreen="true">
+      <div v-if="isUserAuth" class="section">
+        <div class="columns">
+          <div class="column is-half is-offset-one-quarter">
+            Welcome {{ getUser.email }}
+          </div>
+        </div>
+      </div>
       <ion-header collapse="condense">
         <ion-toolbar>
           <ion-title size="large">Inbox</ion-title>
         </ion-toolbar>
       </ion-header>
-
-      <ion-list>
-        <div v-for="subject in subjects" :key="subject.name">
-          {{ subject.name }}
-        </div>
-      </ion-list>
     </ion-content>
   </ion-page>
 </template>
@@ -26,42 +27,25 @@
 import {
   IonContent,
   IonHeader,
-  IonList,
   IonPage,
   IonTitle,
   IonToolbar
 } from '@ionic/vue'
 import { defineComponent } from 'vue'
-import { mapState, mapActions } from 'vuex'
+import { mapGetters } from 'vuex'
 
 export default defineComponent({
   name: 'Home',
-  data: (): any => ({}),
-  methods: {
-    ...mapActions(['bindSubjects'])
-  },
-  computed: {
-    test(): any {
-      return 2
-    },
-    subjects(): any {
-      return this.$store.state.subjects
-    },
-    answer(): any {
-      return this.$store.state.answer
-    }
-  },
   components: {
     IonContent,
     IonHeader,
-    IonList,
     IonPage,
     IonTitle,
     IonToolbar
   },
-  mounted() {
-    this.bindSubjects()
-    this.$store.dispatch('getAnswer')
+  data: (): any => ({}),
+  computed: {
+    ...mapGetters(['getUser', 'isUserAuth'])
   }
 })
 </script>
