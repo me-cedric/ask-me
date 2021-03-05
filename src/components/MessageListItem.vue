@@ -5,9 +5,7 @@
     :detail="false"
     class="list-item"
   >
-  <template v-slot:start>
-    <div :class="!message.read ? 'dot dot-unread' : 'dot'"></div>
-  </template>
+    <div slot="start" :class="!message.read ? 'dot dot-unread' : 'dot'"></div>
     <ion-label class="ion-text-wrap">
       <h2>
         {{ message.fromName }}

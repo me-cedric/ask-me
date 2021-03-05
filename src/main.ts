@@ -23,12 +23,9 @@ import '@ionic/vue/css/display.css'
 /* Theme variables */
 import './theme/variables.css'
 
-import { firestorePlugin } from 'vuefire'
-
 import store from './store'
 
 const app = createApp(App)
-  .use(firestorePlugin)
   .use(store)
   .use(IonicVue)
   .use(router)

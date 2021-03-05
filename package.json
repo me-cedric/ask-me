@@ -11,6 +11,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@capacitor/android": "^2.4.7",
     "@capacitor/core": "2.4.7",
     "@ionic/vue": "^5.6.0",
     "@ionic/vue-router": "^5.6.0",
@@ -18,8 +19,9 @@
     "firebase": "^8.2.10",
     "vue": "^3.0.0-0",
     "vue-router": "^4.0.0-0",
-    "vuefire": "^2.2.5",
-    "vuex": "^4.0.0"
+    "vuefire": "^3.0.0-alpha.2",
+    "vuex": "^4.0.0",
+    "vuexfire": "^3.2.0-alpha.0"
   },
   "devDependencies": {
     "@capacitor/cli": "2.4.7",

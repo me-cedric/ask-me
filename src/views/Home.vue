@@ -7,12 +7,6 @@
     </ion-header>
 
     <ion-content :fullscreen="true">
-      <template v-slot:fixed>
-        <ion-refresher @ionRefresh="refresh($event)">
-          <ion-refresher-content></ion-refresher-content>
-        </ion-refresher>
-      </template>
-
       <ion-header collapse="condense">
         <ion-toolbar>
           <ion-title size="large">Inbox</ion-title>
@@ -20,11 +14,9 @@
       </ion-header>
 
       <ion-list>
-        <MessageListItem
-          v-for="message in messages"
-          :key="message.id"
-          :message="message"
-        />
+        <div v-for="subject in subjects" :key="subject.name">
+          {{ subject.name }}
+        </div>
       </ion-list>
     </ion-content>
   </ion-page>
@@ -36,39 +28,31 @@ import {
   IonHeader,
   IonList,
   IonPage,
-  IonRefresher,
-  IonRefresherContent,
   IonTitle,
   IonToolbar
 } from '@ionic/vue'
-import MessageListItem from '@/components/MessageListItem.vue'
 import { defineComponent } from 'vue'
-import { getMessages } from '@/data/messages'
+import { mapState, mapActions } from 'vuex'
 
 export default defineComponent({
   name: 'Home',
-  data() {
-    return {
-      messages: getMessages()
-    }
-  },
+  data: (): any => ({}),
   methods: {
-    refresh: (ev: CustomEvent) => {
-      setTimeout(() => {
-        ev.detail.complete()
-      }, 3000)
-    }
+    ...mapActions(['bindSubjects'])
+  },
+  computed: {
+    ...mapState(['subjects'])
   },
   components: {
     IonContent,
     IonHeader,
     IonList,
     IonPage,
-    IonRefresher,
-    IonRefresherContent,
     IonTitle,
-    IonToolbar,
-    MessageListItem
+    IonToolbar
+  },
+  created() {
+    this.bindSubjects()
   }
 })
 </script>
