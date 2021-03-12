@@ -8,18 +8,17 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/login',
     name: 'Login',
-    component: Login,
-    alias: '/'
+    component: Login
   },
   {
     path: '/register',
     name: 'Register',
     component: Register
   },
-  // {
-  //   path: '/',
-  //   redirect: '/home'
-  // },
+  {
+    path: '/',
+    redirect: '/home'
+  },
   {
     path: '/home',
     name: 'Home',

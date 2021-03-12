@@ -15,6 +15,11 @@ const firebaseConfig = {
 const { Timestamp, GeoPoint } = firebase.firestore
 export { Timestamp, GeoPoint }
 
+export const googleAuthProvider = new firebase.auth.GoogleAuthProvider()
+export const githubAuthProvider = new firebase.auth.GithubAuthProvider()
+export const twitterAuthProvider = new firebase.auth.TwitterAuthProvider()
+export const appleAuthProvider = new firebase.auth.OAuthProvider('apple.com')
+
 export const firebaseApp = firebase.initializeApp(firebaseConfig)
 
 export const db = firebaseApp.firestore()

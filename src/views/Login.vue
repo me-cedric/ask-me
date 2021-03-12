@@ -58,15 +58,37 @@
             </div>
             <div class="field">
               <p class="control">
-                <ion-button
-                  @click.prevent="validate()"
-                  class="button is-success"
-                >
+                <ion-button @click.prevent="validate" class="button is-success">
                   Login
                 </ion-button>
+                <a href="/register">Register</a>
               </p>
             </div>
           </form>
+          <div class="field">
+            <p class="control">
+              <ion-button @click="googleLogin" class="button is-success">
+                google login
+              </ion-button>
+            </p>
+          </div>
+          <div class="field">
+            <p class="control">
+              <ion-button @click="githubLogin" class="button is-success">
+                github login
+              </ion-button>
+            </p>
+          </div>
+          <div class="field">
+            <p class="control">
+              <ion-button @click="twitterLogin" class="button is-success">
+                twitter login
+              </ion-button>
+            </p>
+          </div>
+          <!-- <ion-button @click="appleLogin" class="button is-success">
+            apple login
+          </ion-button> -->
         </ion-card-content>
       </ion-card>
     </ion-content>
@@ -74,6 +96,12 @@
 </template>
 
 <script lang="ts">
+import {
+  appleAuthProvider,
+  githubAuthProvider,
+  googleAuthProvider,
+  twitterAuthProvider
+} from '@/plugins/firebaseDatabase'
 import {
   IonContent,
   IonButton,
@@ -105,7 +133,7 @@ export default defineComponent({
     validationErrors: []
   }),
   methods: {
-    ...mapActions(['signInAction']),
+    ...mapActions(['signInAction', 'socialSignInAction']),
     resetError() {
       this.validationErrors = []
     },
@@ -135,7 +163,22 @@ export default defineComponent({
       }
     },
     signIn() {
-      this.signInAction({ email: this.email, password: this.password })
+      this.signInAction({
+        email: this.email,
+        password: this.password
+      })
+    },
+    googleLogin() {
+      this.socialSignInAction(googleAuthProvider)
+    },
+    githubLogin() {
+      this.socialSignInAction(githubAuthProvider)
+    },
+    twitterLogin() {
+      this.socialSignInAction(twitterAuthProvider)
+    },
+    appleLogin() {
+      this.socialSignInAction(appleAuthProvider)
     }
   }
 })

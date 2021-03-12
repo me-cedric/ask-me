@@ -7,9 +7,11 @@ import '@/plugins/firebaseDatabase'
 import mutations from './mutations'
 import actions from './actions'
 import getters from './getters'
+import { Question } from '@/data/question'
 
 export interface State {
   subjects: Subject[]
+  questions: Question[]
   users: User[]
   user?: User
   error?: string
@@ -17,6 +19,7 @@ export interface State {
 
 const initialState = (): State => ({
   subjects: [], // Will be bound as an array
+  questions: [],
   user: null, // Will be bound as an object
   users: [],
   error: null

@@ -5,7 +5,7 @@ import { User, UserMetadata } from '@/data/user'
 
 const actions: ActionTree<State, State> = {
   authAction({ commit }) {
-    firebase.auth().onAuthStateChanged((user) => {
+    return firebase.auth().onAuthStateChanged((user) => {
       if (user) {
         db.collection('users')
           .doc(user.uid)
@@ -47,7 +47,7 @@ const actions: ActionTree<State, State> = {
     })
   },
   signUpAction({ commit }, payload) {
-    firebase
+    return firebase
       .auth()
       .createUserWithEmailAndPassword(payload.email, payload.password)
       .catch((error) => {
@@ -55,15 +55,23 @@ const actions: ActionTree<State, State> = {
       })
   },
   signInAction({ commit }, payload) {
-    firebase
+    return firebase
       .auth()
       .signInWithEmailAndPassword(payload.email, payload.password)
       .catch((error) => {
         commit('setError', error.message)
       })
   },
+  socialSignInAction({ commit }, payload) {
+    return firebase
+      .auth()
+      .signInWithPopup(payload)
+      .catch((error) => {
+        commit('setError', error.message)
+      })
+  },
   signInAnonymouslyAction({ commit }) {
-    firebase
+    return firebase
       .auth()
       .signInAnonymously()
       .catch((error) => {
@@ -71,7 +79,7 @@ const actions: ActionTree<State, State> = {
       })
   },
   signOutAction({ commit }) {
-    firebase
+    return firebase
       .auth()
       .signOut()
       .catch((error) => {
