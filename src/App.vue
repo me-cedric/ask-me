@@ -8,6 +8,7 @@
 import { IonApp, IonRouterOutlet } from '@ionic/vue'
 import { defineComponent } from 'vue'
 import { mapActions, mapGetters } from 'vuex'
+import { useRoute } from 'vue-router'
 
 export default defineComponent({
   name: 'App',
@@ -15,21 +16,30 @@ export default defineComponent({
     IonApp,
     IonRouterOutlet
   },
+  data: (): any => ({
+    path: null
+  }),
   methods: {
     ...mapActions(['authAction'])
   },
   computed: {
-    ...mapGetters(['getUser', 'isUserAuth']),
-    authed() {
-      return this.isUserAuth
+    ...mapGetters(['user', 'isUserNotAuthed']),
+    notAuthed() {
+      return this.isUserNotAuthed
     }
   },
   mounted() {
+    const route = useRoute()
+    this.path = route.path
     this.authAction()
   },
   watch: {
-    authed(newAuthed) {
-      this.$router.push(newAuthed ? '/' : '/login')
+    notAuthed(newNotAuthed) {
+      if (newNotAuthed && this.path != '/login') {
+        this.$router.push('/login')
+      } else if (!newNotAuthed && this.path == '/login') {
+        this.$router.push('/')
+      }
     }
   }
 })

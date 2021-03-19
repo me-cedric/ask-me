@@ -8,11 +8,17 @@ const mutations: MutationTree<State> = {
   setSubjects(state, payload) {
     state.subjects = payload
   },
+  setSubject(state, payload) {
+    state.subject = payload
+  },
   setQuestions(state, payload) {
     state.questions = payload
   },
   setError(state, payload) {
     state.error = payload
+  },
+  setUserSignInStatus(state, payload) {
+    state.userSignedIn = payload
   }
 }
 

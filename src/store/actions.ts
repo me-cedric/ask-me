@@ -2,12 +2,16 @@ import { ActionTree } from 'vuex'
 import { State } from '.'
 import { db, firebaseApp as firebase } from '@/plugins/firebaseDatabase'
 import { User, UserMetadata } from '@/data/user'
+import { Subject } from '@/data/subject'
+import { Question } from '@/data/question'
+
+const subjectsRef = db.collection('subjects')
 
 const actions: ActionTree<State, State> = {
   authAction({ commit }) {
     return firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        db.collection('users')
+        db.collection('users') // should be done with cloud function at user creation
           .doc(user.uid)
           .get()
           .then((userDoc) => {
@@ -39,10 +43,14 @@ const actions: ActionTree<State, State> = {
               .collection('users')
               .doc(user.uid)
               .get()
-              .then((userDoc) => commit('setUser', userDoc.data()))
           )
+          .then((userDoc) => {
+            commit('setUser', userDoc.data())
+            commit('setUserSignInStatus', true)
+          })
       } else {
         commit('setUser', null)
+        commit('setUserSignInStatus', false)
       }
     })
   },
@@ -82,6 +90,53 @@ const actions: ActionTree<State, State> = {
     return firebase
       .auth()
       .signOut()
+      .catch((error) => {
+        commit('setError', error.message)
+      })
+  },
+  getSubjectsAction({ commit }) {
+    return subjectsRef
+      .get()
+      .then(async (querySnapshot) => {
+        const subjects: Subject[] = []
+        await querySnapshot.forEach(async (doc) => {
+          const subject: Subject = doc.data() as Subject
+          subject.id = doc.id
+          const questionsSnapshot = await db
+            .collection('subjects/' + doc.id + '/questions')
+            .get()
+          if (subject.questions == null) {
+            subject.questions = []
+          }
+          questionsSnapshot.forEach((q) =>
+            subject.questions.push(q.data() as Question)
+          )
+          subjects.push(subject)
+        })
+        commit('setSubjects', subjects)
+      })
+      .catch((error) => {
+        commit('setError', error.message)
+      })
+  },
+  getSubjectAction({ commit }, payload) {
+    return subjectsRef
+      .doc(payload)
+      .get()
+      .then(async (doc) => {
+        const subject: Subject = doc.data() as Subject
+        subject.id = doc.id
+        const questionsSnapshot = await db
+          .collection('subjects/' + doc.id + '/questions')
+          .get()
+        if (subject.questions == null) {
+          subject.questions = []
+        }
+        questionsSnapshot.forEach((q) =>
+          subject.questions.push(q.data() as Question)
+        )
+        commit('setSubject', subject)
+      })
       .catch((error) => {
         commit('setError', error.message)
       })

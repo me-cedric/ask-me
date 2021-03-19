@@ -11,7 +11,9 @@ import { Question } from '@/data/question'
 
 export interface State {
   subjects: Subject[]
+  subject: Subject
   questions: Question[]
+  userSignedIn?: boolean
   users: User[]
   user?: User
   error?: string
@@ -19,7 +21,9 @@ export interface State {
 
 const initialState = (): State => ({
   subjects: [], // Will be bound as an array
+  subject: null,
   questions: [],
+  userSignedIn: null, // Will be bound as an object
   user: null, // Will be bound as an object
   users: [],
   error: null
