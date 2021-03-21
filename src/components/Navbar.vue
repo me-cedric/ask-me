@@ -2,10 +2,7 @@
   <ion-header :translucent="true">
     <ion-toolbar>
       <ion-buttons slot="start">
-        <ion-menu-button
-          :onclick="openMenu()"
-          auto-hide="false"
-        ></ion-menu-button>
+        <ion-menu-button auto-hide="false"></ion-menu-button>
       </ion-buttons>
       <ion-title>{{ title }}</ion-title>
     </ion-toolbar>
@@ -18,8 +15,7 @@ import {
   IonTitle,
   IonToolbar,
   IonButtons,
-  IonMenuButton,
-  menuController
+  IonMenuButton
 } from '@ionic/vue'
 import { defineComponent } from 'vue'
 
@@ -34,11 +30,6 @@ export default defineComponent({
   },
   props: {
     title: String
-  },
-  methods: {
-    openMenu() {
-      this.$emit('openMenu')
-    }
   }
 })
 </script>

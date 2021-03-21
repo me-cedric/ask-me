@@ -81,10 +81,7 @@ import {
   IonButton,
   IonCard,
   IonCardContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar
+  IonPage
 } from '@ionic/vue'
 import { defineComponent } from 'vue'
 import { mapActions } from 'vuex'
