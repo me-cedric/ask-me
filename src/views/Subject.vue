@@ -1,37 +1,26 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>Ask me</ion-title>
-      </ion-toolbar>
-    </ion-header>
+    <navbar :title="subject.name"></navbar>
 
-    <ion-content :fullscreen="true">
+    <ion-content :fullscreen="true" id="content">
       {{ subject }}
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import {
-  IonContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar
-} from '@ionic/vue'
+import { IonContent, IonPage } from '@ionic/vue'
 import { defineComponent } from 'vue'
 import { mapActions, mapGetters } from 'vuex'
 import { useRoute } from 'vue-router'
+import Navbar from '@/components/Navbar.vue'
 
 export default defineComponent({
   name: 'Subject',
   components: {
     IonContent,
-    IonHeader,
     IonPage,
-    IonTitle,
-    IonToolbar
+    Navbar
   },
   data: (): any => ({}),
   methods: {

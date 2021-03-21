@@ -1,18 +1,8 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>Login</ion-title>
-      </ion-toolbar>
-    </ion-header>
+    <navbar title="Login"></navbar>
 
-    <ion-content :fullscreen="true">
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Login</ion-title>
-        </ion-toolbar>
-      </ion-header>
-
+    <ion-content :fullscreen="true" id="content">
       <ion-card>
         <ion-card-content>
           <div
@@ -107,13 +97,11 @@ import {
   IonButton,
   IonCard,
   IonCardContent,
-  IonHeader,
-  IonPage,
-  IonTitle,
-  IonToolbar
+  IonPage
 } from '@ionic/vue'
 import { defineComponent } from 'vue'
 import { mapActions } from 'vuex'
+import Navbar from '@/components/Navbar.vue'
 
 export default defineComponent({
   name: 'Login',
@@ -122,10 +110,8 @@ export default defineComponent({
     IonButton,
     IonCard,
     IonCardContent,
-    IonHeader,
     IonPage,
-    IonTitle,
-    IonToolbar
+    Navbar
   },
   data: (): any => ({
     email: null,

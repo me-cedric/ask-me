@@ -1,18 +1,16 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>Ask me</ion-title>
-      </ion-toolbar>
-    </ion-header>
+    <navbar title="Ask me"></navbar>
 
-    <ion-content :fullscreen="true">
+    <ion-content :fullscreen="true" id="content">
       <div v-if="isUserAuth" class="section">
         Welcome {{ user.displayName }}
       </div>
 
       <ion-list>
         <ion-item
+          lines="none"
+          detail="false"
           v-for="subject in subjects"
           :key="subject"
           :href="'/subject/' + subject.id"
@@ -39,10 +37,7 @@
 import { Subject } from '@/data/subject'
 import {
   IonContent,
-  IonHeader,
   IonPage,
-  IonTitle,
-  IonToolbar,
   IonList,
   IonCard,
   IonCardHeader,
@@ -52,21 +47,20 @@ import {
 } from '@ionic/vue'
 import { defineComponent } from 'vue'
 import { mapActions, mapGetters } from 'vuex'
+import Navbar from '@/components/Navbar.vue'
 
 export default defineComponent({
   name: 'Home',
   components: {
     IonContent,
-    IonHeader,
     IonPage,
-    IonTitle,
-    IonToolbar,
     IonList,
     IonCard,
     IonCardHeader,
     IonCardContent,
     IonCardTitle,
-    IonItem
+    IonItem,
+    Navbar
   },
   data: (): any => ({}),
   methods: {
