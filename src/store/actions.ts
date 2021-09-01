@@ -1,25 +1,24 @@
 import { ActionTree } from 'vuex'
 import { State } from '.'
-import { db, firebaseApp as firebase } from '@/plugins/firebaseDatabase'
+import { db } from '@/plugins/firebaseDatabase'
+import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup, signInAnonymously, signOut } from "firebase/auth"
+import { collection, doc, getDoc, setDoc } from 'firebase/firestore'
 import { User, UserMetadata } from '@/data/user'
 import { Subject } from '@/data/subject'
 import { Question } from '@/data/question'
 
-const subjectsRef = db.collection('subjects')
+const subjectsRef = collection(db, 'subjects')
+const auth = getAuth()
 
 const actions: ActionTree<State, State> = {
   authAction({ commit }) {
-    return firebase.auth().onAuthStateChanged((user) => {
+    return onAuthStateChanged(auth, (user) => {
       if (user) {
-        db.collection('users') // should be done with cloud function at user creation
-          .doc(user.uid)
-          .get()
+        // should be done with cloud function at user creation
+        getDoc(doc(collection(db, 'users'), user.uid))
           .then((userDoc) => {
             const userData = userDoc.data()
-            return db
-              .collection('users')
-              .doc(user.uid)
-              .set({
+            return setDoc(doc(collection(db, 'users')), {
                 emailVerified: user.emailVerified,
                 isAnonymous: user.isAnonymous,
                 metadata: {
@@ -39,10 +38,7 @@ const actions: ActionTree<State, State> = {
               } as User)
           })
           .then(() =>
-            db
-              .collection('users')
-              .doc(user.uid)
-              .get()
+            getDoc(doc(collection(db, 'users'), user.uid))
           )
           .then((userDoc) => {
             commit('setUser', userDoc.data())
@@ -55,60 +51,47 @@ const actions: ActionTree<State, State> = {
     })
   },
   signUpAction({ commit }, payload) {
-    return firebase
-      .auth()
-      .createUserWithEmailAndPassword(payload.email, payload.password)
+    return createUserWithEmailAndPassword(auth, payload.email, payload.password)
       .catch((error) => {
         commit('setError', error.message)
       })
   },
   signInAction({ commit }, payload) {
-    return firebase
-      .auth()
-      .signInWithEmailAndPassword(payload.email, payload.password)
+    return signInWithEmailAndPassword(auth, payload.email, payload.password)
       .catch((error) => {
         commit('setError', error.message)
       })
   },
   socialSignInAction({ commit }, payload) {
-    return firebase
-      .auth()
-      .signInWithPopup(payload)
+    return signInWithPopup(auth, payload)
       .catch((error) => {
         commit('setError', error.message)
       })
   },
   signInAnonymouslyAction({ commit }) {
-    return firebase
-      .auth()
-      .signInAnonymously()
+    return signInAnonymously(auth)
       .catch((error) => {
         commit('setError', error.message)
       })
   },
   signOutAction({ commit }) {
-    return firebase
-      .auth()
-      .signOut()
+    return signOut(auth)
       .catch((error) => {
         commit('setError', error.message)
       })
   },
   getSubjectsAction({ commit }) {
-    return subjectsRef
-      .get()
+    return getDoc(doc(subjectsRef))
       .then(async (querySnapshot) => {
         const subjects: Subject[] = []
-        await querySnapshot.forEach(async (doc) => {
-          const subject: Subject = doc.data() as Subject
-          subject.id = doc.id
-          const questionsSnapshot = await db
-            .collection('subjects/' + doc.id + '/questions')
-            .get()
+        await querySnapshot.data().forEach(async (document: any) => {
+          const subject: Subject = document.data() as Subject
+          subject.id = document.id
+          const questionsSnapshot = await getDoc(doc(collection(db, 'subjects/' + document.id + '/questions')))
           if (subject.questions == null) {
             subject.questions = []
           }
-          questionsSnapshot.forEach((q) =>
+          questionsSnapshot.data().forEach((q: any) =>
             subject.questions.push(q.data() as Question)
           )
           subjects.push(subject)
@@ -119,20 +102,16 @@ const actions: ActionTree<State, State> = {
         commit('setError', error.message)
       })
   },
-  getSubjectAction({ commit }, payload) {
-    return subjectsRef
-      .doc(payload)
-      .get()
-      .then(async (doc) => {
-        const subject: Subject = doc.data() as Subject
-        subject.id = doc.id
-        const questionsSnapshot = await db
-          .collection('subjects/' + doc.id + '/questions')
-          .get()
+  getSubjectAction({ commit }) {
+    return getDoc(doc(subjectsRef))
+      .then(async (document) => {
+        const subject: Subject = document.data() as Subject
+        subject.id = document.id
+        const questionsSnapshot = await getDoc(doc(collection(db, 'subjects/' + document.id + '/questions')))
         if (subject.questions == null) {
           subject.questions = []
         }
-        questionsSnapshot.forEach((q) =>
+        questionsSnapshot.data().forEach((q: any) =>
           subject.questions.push(q.data() as Question)
         )
         commit('setSubject', subject)
