@@ -1,59 +1,79 @@
 <template>
   <ion-page>
-    <ion-header :translucent="true">
-      <ion-toolbar>
-        <ion-title>Inbox</ion-title>
-      </ion-toolbar>
-    </ion-header>
-    
-    <ion-content :fullscreen="true">
-      <ion-refresher slot="fixed" @ionRefresh="refresh($event)">
-        <ion-refresher-content></ion-refresher-content>
-      </ion-refresher>
-      
-      <ion-header collapse="condense">
-        <ion-toolbar>
-          <ion-title size="large">Inbox</ion-title>
-        </ion-toolbar>
-      </ion-header>
-      
+    <navbar title="Ask me"></navbar>
+
+    <ion-content :fullscreen="true" id="content">
+      <div v-if="isUserAuth" class="section">
+        Welcome {{ user.displayName }}
+      </div>
+
       <ion-list>
-        <MessageListItem v-for="message in messages" :key="message.id" :message="message" />
+        <ion-item
+          lines="none"
+          detail="false"
+          v-for="subject in subjects"
+          :key="subject"
+          :href="'/subject/' + subject.id"
+        >
+          <ion-card>
+            <img :src="subject.image" />
+            <ion-card-header>
+              <ion-card-title>{{ subject.name }}</ion-card-title>
+            </ion-card-header>
+
+            <ion-card-content>
+              {{ getQCount(subject) }} question{{
+                getQCount(subject) > 1 ? 's' : ''
+              }}
+            </ion-card-content>
+          </ion-card>
+        </ion-item>
       </ion-list>
     </ion-content>
   </ion-page>
 </template>
 
 <script lang="ts">
-import { IonContent, IonHeader, IonList, IonPage, IonRefresher, IonRefresherContent, IonTitle, IonToolbar } from '@ionic/vue';
-import MessageListItem from '@/components/MessageListItem.vue';
-import { defineComponent } from 'vue';
-import { getMessages } from '@/data/messages';
+import { Subject } from '@/data/subject'
+import {
+  IonContent,
+  IonPage,
+  IonList,
+  IonCard,
+  IonCardHeader,
+  IonCardContent,
+  IonCardTitle,
+  IonItem
+} from '@ionic/vue'
+import { defineComponent } from 'vue'
+import { mapActions, mapGetters } from 'vuex'
+import Navbar from '@/components/Navbar.vue'
 
 export default defineComponent({
   name: 'Home',
-  data() {
-    return {
-      messages: getMessages()
-    }
-  },
-  methods: {
-    refresh: (ev: CustomEvent) => {
-      setTimeout(() => {
-        ev.detail.complete();
-      }, 3000);
-    }
-  },
   components: {
     IonContent,
-    IonHeader,
-    IonList,
     IonPage,
-    IonRefresher,
-    IonRefresherContent,
-    IonTitle,
-    IonToolbar,
-    MessageListItem
+    IonList,
+    IonCard,
+    IonCardHeader,
+    IonCardContent,
+    IonCardTitle,
+    IonItem,
+    Navbar
   },
-});
+  data: (): any => ({}),
+  methods: {
+    ...mapActions(['getSubjectsAction']),
+    getQCount(subject: Subject) {
+      return subject.questions.length
+    }
+  },
+  mounted() {
+    this.getSubjectsAction()
+  },
+  computed: {
+    ...mapGetters(['user', 'isUserAuth', 'subjects'])
+  }
+})
 </script>

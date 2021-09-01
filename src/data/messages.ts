@@ -1,8 +1,8 @@
 export interface Message {
-  fromName: string;
-  subject: string;
-  date: string;
-  id: number;
+  fromName: string
+  subject: string
+  date: string
+  id: number
 }
 
 const messages: Message[] = [
@@ -23,7 +23,6 @@ const messages: Message[] = [
     subject: 'Report Results',
     date: '4:55 AM',
     id: 2
-
   },
   {
     fromName: 'Bill Thomas',
@@ -55,8 +54,9 @@ const messages: Message[] = [
     date: 'Last Week',
     id: 7
   }
-];
+]
 
-export const getMessages = () => messages;
+export const getMessages = (): Message[] => messages
 
-export const getMessage = (id: number) => messages.find(m => m.id === id);
+export const getMessage = (id: number): Message | undefined =>
+  messages.find((m) => m.id === id)
